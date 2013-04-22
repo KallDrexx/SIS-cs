@@ -24,14 +24,22 @@ namespace SisCsServer
             {
                 while (_server.IsRunning)
                 {
-                    var line = await reader.ReadLineAsync();
-                    if (!_socket.Connected || line == null)
+                    try
+                    {
+                        string content = await reader.ReadLineAsync();
+                        if (content == null)
+                        {
+                            Console.WriteLine("Client {0} disconnected", _id);
+                            return;
+                        }
+
+                        Console.WriteLine("Client {0} wrote: {1}", _id, content);
+                    }
+                    catch (IOException)
                     {
                         Console.WriteLine("Client {0} disconnected", _id);
                         return;
                     }
-
-                    Console.WriteLine("Client {0} wrote: {1}", _id, line);
                 }
             }
         }
