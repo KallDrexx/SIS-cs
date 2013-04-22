@@ -26,7 +26,7 @@ namespace SisCsServer
                 {
                     try
                     {
-                        string content = await reader.ReadLineAsync();
+                        var content = await reader.ReadLineAsync().ConfigureAwait(false);
                         if (content == null)
                         {
                             Console.WriteLine("Client {0} disconnected", _id);

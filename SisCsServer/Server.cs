@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace SisCsServer
 {
@@ -15,23 +16,26 @@ namespace SisCsServer
             _listener = new TcpListener(ip, port); 
         }
 
-        public void Start()
+        public Task Start()
         {
             _listener.Start();
             IsRunning = true;
-            ListenForClients();
+
+            var task = new Task(ListenForClients);
+            task.Start();
+            return task;
         }
 
-        private async void ListenForClients()
+        private void ListenForClients()
         {
-            int numClients = 0;
+            var numClients = 0;
             while (IsRunning)
             {
-                var tcpClient = await _listener.AcceptTcpClientAsync();
+                var tcpClient = _listener.AcceptTcpClient();
                 var netClient = new NetworkClient(this, tcpClient, numClients);
                 netClient.Start();
-                Console.WriteLine("Client Connected");
 
+                Console.WriteLine("Client {0} Connected", numClients);
                 numClients++;
             }
         }
