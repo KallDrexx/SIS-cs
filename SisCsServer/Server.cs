@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SisCsServer
@@ -8,22 +10,50 @@ namespace SisCsServer
     public class Server
     {
         private readonly TcpListener _listener;
+        private readonly List<NetworkClient> _networkClients;
+        private Task _clientListenTask;
 
-        public bool IsRunning { get; set; }
+        public bool IsRunning { get; private set; }
 
         public Server(IPAddress ip, int port)
         {
             _listener = new TcpListener(ip, port); 
+            _networkClients = new List<NetworkClient>();
         }
 
-        public Task Start()
+        public void Start()
         {
             _listener.Start();
             IsRunning = true;
 
-            var task = new Task(ListenForClients);
-            task.Start();
-            return task;
+            _clientListenTask = new Task(ListenForClients);
+            _clientListenTask.Start();
+            
+            while (IsRunning)
+            {
+                if (_clientListenTask.Exception != null)
+                {
+                    Console.WriteLine("Exception occurred listening for clients: {0}", _clientListenTask.Exception.Message);
+                    IsRunning = false;
+                }
+
+                Thread.Sleep(100);
+            }
+        }
+
+        public void ProcessClientCommand(NetworkClient client, string command)
+        {
+            foreach (var netClient in _networkClients)
+                netClient.SendLine(command);
+        }
+
+        private void ClientConnected(TcpClient client, int clientNumber)
+        {
+            var netClient = new NetworkClient(this, client, clientNumber);
+            netClient.Start();
+
+            _networkClients.Add(netClient);
+            Console.WriteLine("Client {0} Connected", clientNumber);
         }
 
         private void ListenForClients()
@@ -32,12 +62,11 @@ namespace SisCsServer
             while (IsRunning)
             {
                 var tcpClient = _listener.AcceptTcpClient();
-                var netClient = new NetworkClient(this, tcpClient, numClients);
-                netClient.Start();
-
-                Console.WriteLine("Client {0} Connected", numClients);
+                ClientConnected(tcpClient, numClients);
                 numClients++;
             }
+
+            _listener.Stop();
         }
     }
 }
