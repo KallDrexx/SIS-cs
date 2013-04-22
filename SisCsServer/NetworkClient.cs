@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace SisCsServer
 {
@@ -17,7 +18,7 @@ namespace SisCsServer
             _server = server;
         }
 
-        public async void Start()
+        public async Task Start()
         {
             using (var reader = new StreamReader(_socket.GetStream()))
             {
