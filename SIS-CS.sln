@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SisCsServer", "SisCsServer\SisCsServer.csproj", "{B8583BEB-A40B-4CED-980C-5397551F824B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8583BEB-A40B-4CED-980C-5397551F824B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8583BEB-A40B-4CED-980C-5397551F824B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8583BEB-A40B-4CED-980C-5397551F824B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8583BEB-A40B-4CED-980C-5397551F824B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
