@@ -63,7 +63,7 @@ namespace SisCsServer
         private void ClientConnected(TcpClient client, int clientNumber)
         {
             var netClient = new NetworkClient(this, client, clientNumber);
-            netClient.ReceiveInputTask = netClient.Start();
+            netClient.ReceiveInputTask = netClient.ReceiveInput();
 
             _networkClients.Add(netClient);
             Console.WriteLine("Client {0} Connected", clientNumber);

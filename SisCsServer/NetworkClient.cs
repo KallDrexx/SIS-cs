@@ -24,7 +24,7 @@ namespace SisCsServer
             _server = server;
         }
 
-        public async Task Start()
+        public async Task ReceiveInput()
         {
             IsActive = true;
             _networkStream = _socket.GetStream();
