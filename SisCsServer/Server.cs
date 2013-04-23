@@ -40,11 +40,24 @@ namespace SisCsServer
             }
         }
 
-        public void ProcessClientCommand(NetworkClient client, string command)
+        public async Task ProcessClientCommand(NetworkClient client, string command)
         {
+            Console.WriteLine("Client {0} wrote: {1}", client.Id, command);
+
             foreach (var netClient in _networkClients)
                 if (netClient.IsActive)
-                    netClient.SendLine(command);
+                    await netClient.SendLine(command);
+        }
+
+        public void ClientDisconnected(NetworkClient client)
+        {
+            client.IsActive = false;
+            client.Socket.Close();
+
+            if (_networkClients.Contains(client))
+                _networkClients.Remove(client);
+
+            Console.WriteLine("Client {0} disconnected", client.Id);
         }
 
         private void ClientConnected(TcpClient client, int clientNumber)

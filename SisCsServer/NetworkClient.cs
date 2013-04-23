@@ -14,6 +14,8 @@ namespace SisCsServer
 
         public Task ReceiveInputTask { get; set; }
         public bool IsActive { get; set; }
+        public int Id { get { return _id; } }
+        public TcpClient Socket { get { return _socket; } }
 
         public NetworkClient(Server server, TcpClient socket, int id)
         {
@@ -36,25 +38,22 @@ namespace SisCsServer
                         var content = await reader.ReadLineAsync();
                         if (content == null)
                         {
-                            IsActive = false;
-                            Console.WriteLine("Client {0} disconnected", _id);
+                            _server.ClientDisconnected(this);
                             return;
                         }
 
-                        _server.ProcessClientCommand(this, content);
-                        Console.WriteLine("Client {0} wrote: {1}", _id, content);
+                        await _server.ProcessClientCommand(this, content);
                     }
                     catch (IOException)
                     {
-                        IsActive = false;
-                        Console.WriteLine("Client {0} disconnected", _id);
+                        _server.ClientDisconnected(this);
                         return;
                     }
                 }
             }
         }
 
-        public void SendLine(string line)
+        public async Task SendLine(string line)
         {
             if (!IsActive)
                 return;
@@ -62,13 +61,13 @@ namespace SisCsServer
             try
             {
                 var writer = new StreamWriter(_networkStream);
-                writer.WriteLine(line);
+                await writer.WriteLineAsync(line);
                 writer.Flush();
             }
             catch (IOException)
             {
                 // socket closed
-                IsActive = false;
+                _server.ClientDisconnected(this);
             }
         }
     }
