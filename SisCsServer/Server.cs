@@ -26,8 +26,7 @@ namespace SisCsServer
             _listener.Start();
             IsRunning = true;
 
-            _clientListenTask = new Task(ListenForClients);
-            _clientListenTask.Start();
+            _clientListenTask = ListenForClients();
             
             while (IsRunning)
             {
@@ -44,24 +43,25 @@ namespace SisCsServer
         public void ProcessClientCommand(NetworkClient client, string command)
         {
             foreach (var netClient in _networkClients)
-                netClient.SendLine(command);
+                if (netClient.IsActive)
+                    netClient.SendLine(command);
         }
 
         private void ClientConnected(TcpClient client, int clientNumber)
         {
             var netClient = new NetworkClient(this, client, clientNumber);
-            netClient.Start();
+            netClient.ReceiveInputTask = netClient.Start();
 
             _networkClients.Add(netClient);
             Console.WriteLine("Client {0} Connected", clientNumber);
         }
 
-        private void ListenForClients()
+        private async Task ListenForClients()
         {
             var numClients = 0;
             while (IsRunning)
             {
-                var tcpClient = _listener.AcceptTcpClient();
+                var tcpClient = await _listener.AcceptTcpClientAsync();
                 ClientConnected(tcpClient, numClients);
                 numClients++;
             }

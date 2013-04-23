@@ -12,7 +12,8 @@ namespace SisCsServer
         private readonly Server _server;
         private readonly int _id;
 
-        private Task ReceiveInputTask { get; set; }
+        public Task ReceiveInputTask { get; set; }
+        public bool IsActive { get; set; }
 
         public NetworkClient(Server server, TcpClient socket, int id)
         {
@@ -21,40 +22,21 @@ namespace SisCsServer
             _server = server;
         }
 
-        public void Start()
+        public async Task Start()
         {
-            ReceiveInputTask = new Task(ReceiveInput);
-            ReceiveInputTask.Start();
-        }
-
-        public void SendLine(string line)
-        {
-            try
-            {
-                var writer = new StreamWriter(_networkStream);
-                writer.WriteLine(line);
-                writer.Flush();
-            }
-            catch (IOException)
-            {
-                // socket closed
-                return;
-            }
-        }
-
-        private void ReceiveInput()
-        {
+            IsActive = true;
             _networkStream = _socket.GetStream();
 
             using (var reader = new StreamReader(_networkStream))
             {
-                while (_server.IsRunning)
+                while (_server.IsRunning && IsActive)
                 {
                     try
                     {
-                        var content = reader.ReadLine();
+                        var content = await reader.ReadLineAsync();
                         if (content == null)
                         {
+                            IsActive = false;
                             Console.WriteLine("Client {0} disconnected", _id);
                             return;
                         }
@@ -64,10 +46,29 @@ namespace SisCsServer
                     }
                     catch (IOException)
                     {
+                        IsActive = false;
                         Console.WriteLine("Client {0} disconnected", _id);
                         return;
                     }
                 }
+            }
+        }
+
+        public void SendLine(string line)
+        {
+            if (!IsActive)
+                return;
+
+            try
+            {
+                var writer = new StreamWriter(_networkStream);
+                writer.WriteLine(line);
+                writer.Flush();
+            }
+            catch (IOException)
+            {
+                // socket closed
+                IsActive = false;
             }
         }
     }
