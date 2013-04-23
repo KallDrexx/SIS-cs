@@ -28,16 +28,16 @@ namespace SisCsServer
 
             _clientListenTask = ListenForClients();
             
-            while (IsRunning)
-            {
-                if (_clientListenTask.Exception != null)
-                {
-                    Console.WriteLine("Exception occurred listening for clients: {0}", _clientListenTask.Exception.Message);
-                    IsRunning = false;
-                }
+            //while (IsRunning)
+            //{
+            //    if (_clientListenTask.Exception != null)
+            //    {
+            //        Console.WriteLine("Exception occurred listening for clients: {0}", _clientListenTask.Exception.Message);
+            //        IsRunning = false;
+            //    }
 
-                Thread.Sleep(100);
-            }
+            //    Thread.Sleep(100);
+            //}
         }
 
         private void ClientConnected(TcpClient client, int clientNumber)
