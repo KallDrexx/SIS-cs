@@ -40,29 +40,11 @@ namespace SisCsServer
             }
         }
 
-        public async Task ProcessClientCommand(NetworkClient client, string command)
-        {
-            Console.WriteLine("Client {0} wrote: {1}", client.Id, command);
-
-            foreach (var netClient in _networkClients)
-                if (netClient.IsActive)
-                    await netClient.SendLine(command);
-        }
-
-        public void ClientDisconnected(NetworkClient client)
-        {
-            client.IsActive = false;
-            client.Socket.Close();
-
-            if (_networkClients.Contains(client))
-                _networkClients.Remove(client);
-
-            Console.WriteLine("Client {0} disconnected", client.Id);
-        }
-
         private void ClientConnected(TcpClient client, int clientNumber)
         {
-            var netClient = new NetworkClient(this, client, clientNumber);
+            var netClient = new NetworkClient(client, clientNumber);
+            netClient.MessageReceived += ProcessClientCommand;
+            netClient.ClientDisconnected += ClientDisconnected;
             netClient.ReceiveInputTask = netClient.ReceiveInput();
 
             _networkClients.Add(netClient);
@@ -80,6 +62,26 @@ namespace SisCsServer
             }
 
             _listener.Stop();
+        }
+
+        private async void ProcessClientCommand(NetworkClient client, string command)
+        {
+            Console.WriteLine("Client {0} wrote: {1}", client.Id, command);
+
+            foreach (var netClient in _networkClients)
+                if (netClient.IsActive)
+                    await netClient.SendLine(command);
+        }
+
+        private void ClientDisconnected(NetworkClient client)
+        {
+            client.IsActive = false;
+            client.Socket.Close();
+
+            if (_networkClients.Contains(client))
+                _networkClients.Remove(client);
+
+            Console.WriteLine("Client {0} disconnected", client.Id);
         }
     }
 }

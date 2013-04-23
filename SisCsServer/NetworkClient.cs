@@ -9,7 +9,6 @@ namespace SisCsServer
     {
         private readonly TcpClient _socket;
         private NetworkStream _networkStream;
-        private readonly Server _server;
         private readonly int _id;
 
         public Task ReceiveInputTask { get; set; }
@@ -17,11 +16,13 @@ namespace SisCsServer
         public int Id { get { return _id; } }
         public TcpClient Socket { get { return _socket; } }
 
-        public NetworkClient(Server server, TcpClient socket, int id)
+        public event MessageReceivedDelegate MessageReceived;
+        public event ClientDisconnectedDelegate ClientDisconnected;
+
+        public NetworkClient(TcpClient socket, int id)
         {
             _socket = socket;
             _id = id;
-            _server = server;
         }
 
         public async Task ReceiveInput()
@@ -31,22 +32,27 @@ namespace SisCsServer
 
             using (var reader = new StreamReader(_networkStream))
             {
-                while (_server.IsRunning && IsActive)
+                while (IsActive)
                 {
                     try
                     {
                         var content = await reader.ReadLineAsync();
+
+                        // If content is null, that means the connection has been gracefully disconnected
                         if (content == null)
                         {
-                            _server.ClientDisconnected(this);
+                            MarkAsDisconnected();
                             return;
                         }
 
-                        await _server.ProcessClientCommand(this, content);
+                        if (MessageReceived != null)
+                            MessageReceived(this, content);
                     }
+
+                    // If the tcp connection is ungracefully disconnected, it will throw an exception
                     catch (IOException)
                     {
-                        _server.ClientDisconnected(this);
+                        MarkAsDisconnected();
                         return;
                     }
                 }
@@ -60,6 +66,8 @@ namespace SisCsServer
 
             try
             {
+                // Don't use a using statement as we do not want the stream closed
+                //    after the write is completed
                 var writer = new StreamWriter(_networkStream);
                 await writer.WriteLineAsync(line);
                 writer.Flush();
@@ -67,8 +75,15 @@ namespace SisCsServer
             catch (IOException)
             {
                 // socket closed
-                _server.ClientDisconnected(this);
+                MarkAsDisconnected();
             }
+        }
+
+        private void MarkAsDisconnected()
+        {
+            IsActive = false;
+            if (ClientDisconnected != null)
+                ClientDisconnected(this);
         }
     }
 }
