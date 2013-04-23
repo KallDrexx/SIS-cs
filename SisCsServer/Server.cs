@@ -21,7 +21,7 @@ namespace SisCsServer
             _networkClients = new List<NetworkClient>();
         }
 
-        public void Start()
+        public void Run()
         {
             _listener.Start();
             IsRunning = true;

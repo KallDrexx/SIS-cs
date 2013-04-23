@@ -7,7 +7,7 @@ namespace SisCsServer
          static void Main(string[] args)
          {
              var server = new Server(IPAddress.Any, 9001);
-             server.Start();
+             server.Run();
          }
     }
 }
