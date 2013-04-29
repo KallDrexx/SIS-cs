@@ -11,6 +11,7 @@ namespace SisCsServer
     {
         private readonly TcpListener _listener;
         private readonly List<NetworkClient> _networkClients;
+        private readonly List<KeyValuePair<Task, NetworkClient>> _networkClientReceiveInputTasks; 
         private Task _clientListenTask;
 
         public bool IsRunning { get; private set; }
@@ -19,6 +20,7 @@ namespace SisCsServer
         {
             _listener = new TcpListener(ip, port); 
             _networkClients = new List<NetworkClient>();
+            _networkClientReceiveInputTasks = new List<KeyValuePair<Task, NetworkClient>>();
         }
 
         public void Run()
@@ -37,7 +39,8 @@ namespace SisCsServer
 
             // Save the Resulting task from ReceiveInput as a Task so
             //   we can check for any unhandled exceptions that may have occured
-            netClient.ReceiveInputTask = netClient.ReceiveInput();
+            _networkClientReceiveInputTasks.Add(new KeyValuePair<Task, NetworkClient>(netClient.ReceiveInput(),
+                                                                                      netClient));
 
             _networkClients.Add(netClient);
             Console.WriteLine("Client {0} Connected", clientNumber);

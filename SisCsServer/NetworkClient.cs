@@ -12,7 +12,6 @@ namespace SisCsServer
         private NetworkStream _networkStream;
         private readonly int _id;
 
-        public Task ReceiveInputTask { get; set; }
         public bool IsActive { get; set; }
         public int Id { get { return _id; } }
         public TcpClient Socket { get { return _socket; } }

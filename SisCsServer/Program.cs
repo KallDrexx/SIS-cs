@@ -15,7 +15,6 @@ namespace SisCsServer
              var server = new Server(IPAddress.Any, 9001);
              server.Run();
 
-
              ctx.RunMessagePump();
          }
     }
