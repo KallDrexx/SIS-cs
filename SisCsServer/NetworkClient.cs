@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SisCsServer
@@ -37,6 +38,7 @@ namespace SisCsServer
                     try
                     {
                         var content = await reader.ReadLineAsync();
+                        Console.WriteLine("Read TCP data on thread Id: {0}", Thread.CurrentThread.ManagedThreadId);
 
                         // If content is null, that means the connection has been gracefully disconnected
                         if (content == null)

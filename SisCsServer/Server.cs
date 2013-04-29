@@ -27,17 +27,6 @@ namespace SisCsServer
             IsRunning = true;
 
             _clientListenTask = ListenForClients();
-            
-            //while (IsRunning)
-            //{
-            //    if (_clientListenTask.Exception != null)
-            //    {
-            //        Console.WriteLine("Exception occurred listening for clients: {0}", _clientListenTask.Exception.Message);
-            //        IsRunning = false;
-            //    }
-
-            //    Thread.Sleep(100);
-            //}
         }
 
         private void ClientConnected(TcpClient client, int clientNumber)
@@ -45,10 +34,14 @@ namespace SisCsServer
             var netClient = new NetworkClient(client, clientNumber);
             netClient.MessageReceived += ProcessClientCommand;
             netClient.ClientDisconnected += ClientDisconnected;
+
+            // Save the Resulting task from ReceiveInput as a Task so
+            //   we can check for any unhandled exceptions that may have occured
             netClient.ReceiveInputTask = netClient.ReceiveInput();
 
             _networkClients.Add(netClient);
             Console.WriteLine("Client {0} Connected", clientNumber);
+            Console.WriteLine("Thread Id: {0}", Thread.CurrentThread.ManagedThreadId);
         }
 
         private async Task ListenForClients()
