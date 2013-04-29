@@ -16,6 +16,11 @@ namespace SisCsServer
 
         public bool IsRunning { get; private set; }
 
+        public Exception ClientListenTaskException
+        {
+            get { return _clientListenTask.Exception; }
+        }
+
         public Server(IPAddress ip, int port)
         {
             _listener = new TcpListener(ip, port); 
