@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace SisCsServer
+namespace SisCsServer.Irc
 {
     public class IrcClient
     {
@@ -14,6 +11,8 @@ namespace SisCsServer
 
         public string NickName { get; set; }
         public bool IsActive { get { return _networkClient.IsActive; } }
+
+        public event IrcCommandReceivedDelegate IrcCommandReceived;
 
         public IrcClient(TcpClient tcpClient, int clientId)
         {
@@ -39,6 +38,9 @@ namespace SisCsServer
                 return;
 
             Console.WriteLine("User {0}: {1}", NickName, command);
+
+            if (IrcCommandReceived != null)
+                IrcCommandReceived(this, command);
         }
     }
 }

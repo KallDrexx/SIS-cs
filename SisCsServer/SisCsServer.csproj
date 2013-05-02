@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IrcClient.cs" />
+    <Compile Include="Irc\IrcClient.cs" />
+    <Compile Include="Irc\IrcCommandProcessor.cs" />
     <Compile Include="SingleThreadSynchronizationContext .cs" />
     <Compile Include="delegates.cs" />
     <Compile Include="NetworkClient.cs" />
