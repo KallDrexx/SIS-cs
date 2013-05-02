@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 
 namespace SisCsServer
@@ -11,7 +10,6 @@ namespace SisCsServer
              var ctx = new SingleThreadSynchronizationContext();
              SynchronizationContext.SetSynchronizationContext(ctx);
 
-             Console.WriteLine("Main Thread: {0}", Thread.CurrentThread.ManagedThreadId);
              var server = new Server(IPAddress.Any, 9001);
              server.Run();
 

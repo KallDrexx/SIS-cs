@@ -15,6 +15,7 @@ namespace SisCsServer
         public bool IsActive { get; set; }
         public int Id { get { return _id; } }
         public TcpClient Socket { get { return _socket; } }
+        public Task ReceiveInputTask { get; private set; }
 
         public event MessageReceivedDelegate MessageReceived;
         public event ClientDisconnectedDelegate ClientDisconnected;
@@ -37,7 +38,6 @@ namespace SisCsServer
                     try
                     {
                         var content = await reader.ReadLineAsync();
-                        Console.WriteLine("Read TCP data on thread Id: {0}", Thread.CurrentThread.ManagedThreadId);
 
                         // If content is null, that means the connection has been gracefully disconnected
                         if (content == null)

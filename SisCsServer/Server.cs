@@ -10,8 +10,7 @@ namespace SisCsServer
     public class Server
     {
         private readonly TcpListener _listener;
-        private readonly List<NetworkClient> _networkClients;
-        private readonly List<KeyValuePair<Task, NetworkClient>> _networkClientReceiveInputTasks; 
+        private readonly List<IrcClient> _ircClients;
         private Task _clientListenTask;
 
         public bool IsRunning { get; private set; }
@@ -24,8 +23,7 @@ namespace SisCsServer
         public Server(IPAddress ip, int port)
         {
             _listener = new TcpListener(ip, port); 
-            _networkClients = new List<NetworkClient>();
-            _networkClientReceiveInputTasks = new List<KeyValuePair<Task, NetworkClient>>();
+            _ircClients = new List<IrcClient>();
         }
 
         public void Run()
@@ -38,18 +36,10 @@ namespace SisCsServer
 
         private void ClientConnected(TcpClient client, int clientNumber)
         {
-            var netClient = new NetworkClient(client, clientNumber);
-            netClient.MessageReceived += ProcessClientCommand;
-            netClient.ClientDisconnected += ClientDisconnected;
+            var user = new IrcClient(client, clientNumber) {NickName = clientNumber.ToString()};
+            _ircClients.Add(user);
 
-            // Save the Resulting task from ReceiveInput as a Task so
-            //   we can check for any unhandled exceptions that may have occured
-            _networkClientReceiveInputTasks.Add(new KeyValuePair<Task, NetworkClient>(netClient.ReceiveInput(),
-                                                                                      netClient));
-
-            _networkClients.Add(netClient);
             Console.WriteLine("Client {0} Connected", clientNumber);
-            Console.WriteLine("Thread Id: {0}", Thread.CurrentThread.ManagedThreadId);
         }
 
         private async Task ListenForClients()
@@ -63,26 +53,6 @@ namespace SisCsServer
             }
 
             _listener.Stop();
-        }
-
-        private async void ProcessClientCommand(NetworkClient client, string command)
-        {
-            Console.WriteLine("Client {0} wrote: {1}", client.Id, command);
-
-            foreach (var netClient in _networkClients)
-                if (netClient.IsActive)
-                    await netClient.SendLine(command);
-        }
-
-        private void ClientDisconnected(NetworkClient client)
-        {
-            client.IsActive = false;
-            client.Socket.Close();
-
-            if (_networkClients.Contains(client))
-                _networkClients.Remove(client);
-
-            Console.WriteLine("Client {0} disconnected", client.Id);
         }
     }
 }
