@@ -44,8 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Irc\Commands\IReceivedCommand.cs" />
+    <Compile Include="Irc\Commands\IrcCommandAttribute.cs" />
+    <Compile Include="Irc\Commands\NickCommand.cs" />
     <Compile Include="Irc\IrcClient.cs" />
     <Compile Include="Irc\IrcCommandProcessor.cs" />
+    <Compile Include="Irc\IrcController.cs" />
     <Compile Include="SingleThreadSynchronizationContext .cs" />
     <Compile Include="delegates.cs" />
     <Compile Include="NetworkClient.cs" />

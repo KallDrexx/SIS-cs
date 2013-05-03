@@ -12,6 +12,7 @@ namespace SisCsServer
         private readonly TcpListener _listener;
         private readonly List<IrcClient> _ircClients;
         private readonly IrcCommandProcessor _commandProcessor;
+        private readonly IrcController _controller;
         private Task _clientListenTask;
 
         public bool IsRunning { get; private set; }
@@ -20,7 +21,8 @@ namespace SisCsServer
         {
             _listener = new TcpListener(ip, port); 
             _ircClients = new List<IrcClient>();
-            _commandProcessor = new IrcCommandProcessor(_ircClients);
+            _controller = new IrcController(_ircClients);
+            _commandProcessor = new IrcCommandProcessor(_controller);
         }
 
         public void Run()
