@@ -44,9 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Irc\Channel.cs" />
     <Compile Include="Irc\Commands\IReceivedCommand.cs" />
     <Compile Include="Irc\Commands\IrcCommandAttribute.cs" />
-    <Compile Include="Irc\Commands\NickCommand.cs" />
+    <Compile Include="Irc\Commands\Received\NickCommand.cs" />
+    <Compile Include="Irc\Commands\Received\UserCommand.cs" />
+    <Compile Include="Irc\Commands\Sent\Errors\ErrorNeedMoreParamsCommand.cs" />
+    <Compile Include="Irc\Commands\Sent\ISentCommands.cs" />
+    <Compile Include="Irc\Commands\Sent\Replies\WelcomeReply.cs" />
     <Compile Include="Irc\IrcClient.cs" />
     <Compile Include="Irc\IrcCommandProcessor.cs" />
     <Compile Include="Irc\IrcController.cs" />

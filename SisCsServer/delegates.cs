@@ -7,4 +7,6 @@ namespace SisCsServer
     public delegate void ClientDisconnectedDelegate(NetworkClient client);
 
     public delegate void IrcCommandReceivedDelegate(IrcClient client, string command);
+
+    public delegate void UserActivatedDelegate(IrcClient client);
 }

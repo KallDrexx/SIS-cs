@@ -10,10 +10,12 @@ namespace SisCsServer.Irc
         private Task _receiveInputTask;
 
         public string NickName { get; set; }
+        public string FullName { get; set; }
         public bool ConnectionActive { get { return _networkClient.IsActive; } }
-        public bool UserActivated { get; set; }
+        public bool UserActivated { get; private set; }
 
         public event IrcCommandReceivedDelegate IrcCommandReceived;
+        public event UserActivatedDelegate IrcUserActivated;
 
         public IrcClient(TcpClient tcpClient, int clientId)
         {
@@ -22,6 +24,22 @@ namespace SisCsServer.Irc
             _networkClient.MessageReceived += ProcessClientCommand;
 
             _receiveInputTask = _networkClient.ReceiveInput();
+        }
+
+        public async void SendMessage(string message)
+        {
+            await _networkClient.SendLine(message);
+        }
+
+        public void AttemptUserActivation()
+        {
+            // For now, a user is activated if he has a valid nickname and full name set
+            if (!string.IsNullOrWhiteSpace(NickName) && !string.IsNullOrWhiteSpace(FullName))
+            {
+                UserActivated = true;
+                if (IrcUserActivated != null)
+                    IrcUserActivated(this);
+            }
         }
 
         private void ClientSocketDisconnected(NetworkClient client)

@@ -1,4 +1,4 @@
-﻿namespace SisCsServer.Irc.Commands
+﻿namespace SisCsServer.Irc.Commands.Received
 {
     [IrcCommand("NICK", false)]
     public class NickCommand : IReceivedCommand
@@ -9,6 +9,9 @@
                 return;
 
             client.NickName = args[0].Trim();
+
+            // Attempt to activate the user
+            client.AttemptUserActivation();
         }
     }
 }

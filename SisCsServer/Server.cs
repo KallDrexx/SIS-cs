@@ -37,6 +37,7 @@ namespace SisCsServer
         {
             var user = new IrcClient(client, clientNumber);
             user.IrcCommandReceived += _commandProcessor.ProcessCommand;
+            user.IrcUserActivated += _controller.SendActivationMessages;
             _ircClients.Add(user);
 
             Console.WriteLine("Client {0} Connected", clientNumber);
