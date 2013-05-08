@@ -12,7 +12,7 @@ namespace SisCsServer.Irc.Commands.Received
                 var replyCommand = new ErrorNeedMoreParamsCommand
                 {
                     Command = "USER",
-                    SenderAddress = "address"
+                    SenderAddress = Server.HostName
                 };
 
                 client.SendMessage(replyCommand.FormFullResponseString());

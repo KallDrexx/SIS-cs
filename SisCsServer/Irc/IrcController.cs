@@ -16,7 +16,7 @@ namespace SisCsServer.Irc
         {
             var message = new WelcomeReply
             {
-                SenderAddress = "",
+                SenderAddress = Server.HostName,
                 NickName = client.NickName
             }.FormFullResponseString();
 

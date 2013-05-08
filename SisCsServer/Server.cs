@@ -15,6 +15,8 @@ namespace SisCsServer
         private readonly IrcController _controller;
         private Task _clientListenTask;
 
+        public static string HostName { get; set; }
+
         public bool IsRunning { get; private set; }
 
         public Server(IPAddress ip, int port)

@@ -11,6 +11,7 @@ namespace SisCsServer
              SynchronizationContext.SetSynchronizationContext(ctx);
 
              var server = new Server(IPAddress.Any, 9001);
+             Server.HostName = "localhost";
              server.Run();
 
              ctx.RunMessagePump();
