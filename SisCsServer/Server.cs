@@ -35,7 +35,7 @@ namespace SisCsServer
 
         private void ClientConnected(TcpClient client, int clientNumber)
         {
-            var user = new IrcClient(client, clientNumber) {NickName = clientNumber.ToString()};
+            var user = new IrcClient(client, clientNumber);
             user.IrcCommandReceived += _commandProcessor.ProcessCommand;
             _ircClients.Add(user);
 

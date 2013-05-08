@@ -10,7 +10,8 @@ namespace SisCsServer.Irc
         private Task _receiveInputTask;
 
         public string NickName { get; set; }
-        public bool IsActive { get { return _networkClient.IsActive; } }
+        public bool ConnectionActive { get { return _networkClient.IsActive; } }
+        public bool UserActivated { get; set; }
 
         public event IrcCommandReceivedDelegate IrcCommandReceived;
 

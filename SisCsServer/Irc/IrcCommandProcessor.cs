@@ -11,10 +11,12 @@ namespace SisCsServer.Irc
     {
         private readonly IrcController _controller;
         private readonly Dictionary<string, IReceivedCommand> _availableCommands;
+        private readonly Dictionary<IReceivedCommand, IrcCommandAttribute> _commandProperties;
 
         public IrcCommandProcessor(IrcController controller)
         {
             _controller = controller;
+            _commandProperties = new Dictionary<IReceivedCommand, IrcCommandAttribute>();
             _availableCommands = FindAllAvailableCommands();
         }
 
@@ -23,17 +25,19 @@ namespace SisCsServer.Irc
             var commandDetails = Parse(command);
             foreach (var pair in _availableCommands)
             {
-                if (pair.Key.Equals(commandDetails.Key, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    pair.Value.ProcessCommand(commandDetails.Value, client, _controller);
-                    return;
-                }
+                if (!pair.Key.Equals(commandDetails.Key, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                if (!client.UserActivated && _commandProperties[pair.Value].RequiresActivatedUser)
+                    continue;
+
+                pair.Value.ProcessCommand(commandDetails.Value, client, _controller);
+                return;
             }
         }
 
         private KeyValuePair<string, string[]> Parse(string rawCommand)
         {
-            var commandName = string.Empty;
             var arguments = new List<string>();
             if (string.IsNullOrWhiteSpace(rawCommand))
                 return new KeyValuePair<string, string[]>();
@@ -50,7 +54,7 @@ namespace SisCsServer.Irc
                 return new KeyValuePair<string, string[]>();
 
             // Extract the command name
-            commandName = commandParts[partIndex];
+            var commandName = commandParts[partIndex];
             partIndex++;
 
             // Gather the rest of the arguments
@@ -111,6 +115,7 @@ namespace SisCsServer.Irc
                         string.Format("Type {0} is not a IReceivedCommand", cmd.Name));
 
                 commandMap.Add(commandAttribute.CommandName, instance);
+                _commandProperties.Add(instance, commandAttribute);
             }
 
             return commandMap;

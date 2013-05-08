@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace SisCsServer.Irc.Commands
+﻿namespace SisCsServer.Irc.Commands
 {
-    [IrcCommand("NICK")]
+    [IrcCommand("NICK", false)]
     public class NickCommand : IReceivedCommand
     {
         public void ProcessCommand(string[] args, IrcClient client, IrcController controller)
