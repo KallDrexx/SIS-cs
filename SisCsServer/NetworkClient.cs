@@ -16,6 +16,7 @@ namespace SisCsServer
         public int Id { get { return _id; } }
         public TcpClient Socket { get { return _socket; } }
         public Task ReceiveInputTask { get; private set; }
+        public string RemoteAddress { get; private set; }
 
         public event MessageReceivedDelegate MessageReceived;
         public event ClientDisconnectedDelegate ClientDisconnected;
@@ -24,6 +25,8 @@ namespace SisCsServer
         {
             _socket = socket;
             _id = id;
+
+            RemoteAddress = _socket.Client.RemoteEndPoint.ToString();
         }
 
         public async Task ReceiveInput()

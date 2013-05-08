@@ -7,12 +7,12 @@
 
         public string SenderAddress { get; set; }
         public string Command { get; set; }
-        public string NickName { get; set; }
+        public string SenderNickName { get; set; }
 
         public string FormFullResponseString()
         {
             return string.Format(":{0} {1} {2} {3} {4}", 
-                SenderAddress, ResponseCode, NickName, Command, ResponseText);
+                SenderAddress, ResponseCode, SenderNickName, Command, ResponseText);
         }
     }
 }

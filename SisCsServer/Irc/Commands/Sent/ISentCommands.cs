@@ -3,7 +3,7 @@
     public interface ISentCommands
     {
         string SenderAddress { get; set; }
-        string NickName { get; set; }
+        string SenderNickName { get; set; }
         string FormFullResponseString();
     }
 }

@@ -20,9 +20,11 @@ namespace SisCsServer.Irc.Commands.Received
             }
 
             client.FullName = args[3];
+            client.UserName = args[0];
 
             // Attempt to activate the user
             client.AttemptUserActivation();
+            client.SetUserMask();
         }
     }
 }

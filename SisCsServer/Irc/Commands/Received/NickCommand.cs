@@ -12,6 +12,7 @@
 
             // Attempt to activate the user
             client.AttemptUserActivation();
+            client.SetUserMask();
         }
     }
 }

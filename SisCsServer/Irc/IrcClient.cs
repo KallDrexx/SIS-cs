@@ -11,6 +11,8 @@ namespace SisCsServer.Irc
 
         public string NickName { get; set; }
         public string FullName { get; set; }
+        public string UserName { get; set; }
+        public string UserMask { get; private set; }
         public bool ConnectionActive { get { return _networkClient.IsActive; } }
         public bool UserActivated { get; private set; }
 
@@ -40,6 +42,11 @@ namespace SisCsServer.Irc
                 if (IrcUserActivated != null)
                     IrcUserActivated(this);
             }
+        }
+
+        public void SetUserMask()
+        {
+            UserMask = string.Format("{0}!~{1}@{2}", NickName, UserName, _networkClient.RemoteAddress);
         }
 
         private void ClientSocketDisconnected(NetworkClient client)
