@@ -9,7 +9,7 @@ namespace SisCsServer.Irc.Commands.Sent.Announcements
 
         public string FormFullResponseString()
         {
-            return string.Format(":{0} JOIN {1}", UserMask, ChannelName);
+            return string.Format(":{0} JOIN #{1}", UserMask, ChannelName);
         }
     }
 }

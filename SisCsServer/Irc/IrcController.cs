@@ -59,6 +59,7 @@ namespace SisCsServer.Irc
             // If the channel doesn't exist yet, create it
             var channel =
                 _channels.FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.InvariantCultureIgnoreCase));
+
             if (channel == null)
             {
                 channel = new Channel(channelName);
@@ -66,6 +67,17 @@ namespace SisCsServer.Irc
             }
 
             channel.JoinClient(client);
+        }
+
+        public void PartChannel(IrcClient client, string channelName)
+        {
+            var channel =
+                _channels.FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (channel == null)
+                return;
+
+            channel.PartClient(client);
         }
     }
 }

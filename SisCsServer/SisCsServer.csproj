@@ -49,9 +49,11 @@
     <Compile Include="Irc\Commands\IrcCommandAttribute.cs" />
     <Compile Include="Irc\Commands\Received\JoinCommand.cs" />
     <Compile Include="Irc\Commands\Received\NickCommand.cs" />
+    <Compile Include="Irc\Commands\Received\PartCommand.cs" />
     <Compile Include="Irc\Commands\Received\PrivateMessageCommand.cs" />
     <Compile Include="Irc\Commands\Received\UserCommand.cs" />
     <Compile Include="Irc\Commands\Sent\Announcements\UserJoinedChannelAnnouncement.cs" />
+    <Compile Include="Irc\Commands\Sent\Announcements\UserPartedChannelAnnouncement.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\NeedMoreParamsError.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\NicknameInUseError.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\NoSuchChannelError.cs" />

@@ -14,7 +14,7 @@ namespace SisCsServer.Irc.Commands.Sent.Replies
         public string FormFullResponseString()
         {
             var response = new StringBuilder();
-            response.AppendFormat(":{0} {1} {2} @ #{3} :{2} ",
+            response.AppendFormat(":{0} {1} {2} @ #{3} :{2}",
                 SenderAddress, ResponseCode, RecipientNickName, ChannelName);
 
             foreach (var user in Users)

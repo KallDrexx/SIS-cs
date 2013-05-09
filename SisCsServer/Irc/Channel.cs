@@ -46,12 +46,16 @@ namespace SisCsServer.Irc
                 Topic = Topic
             }.SendMessageToClient(client);
 
+            var usersToList = _clients.Where(x => x != client)
+                                      .Select(x => x.NickName)
+                                      .ToArray();
+
             new ChannelUserListReply
             {
                 SenderAddress = Server.HostName,
                 RecipientNickName = client.NickName,
                 ChannelName = Name,
-                Users = _clients.Select(x => x.NickName).ToArray()
+                Users = usersToList
             }.SendMessageToClient(client);
 
             new ChanneluserListEndReply()
@@ -60,6 +64,24 @@ namespace SisCsServer.Irc
                 ClientNick = client.NickName,
                 ChannelName = Name
             }.SendMessageToClient(client);
+        }
+
+        public void PartClient(IrcClient client)
+        {
+            if (!_clients.Contains(client))
+                return;
+
+            // Relay the client parting to all clients
+            foreach (var ircClient in _clients)
+            {
+                new UserPartedChannelAnnouncement
+                {
+                    SenderMask = client.UserMask,
+                    ChannelName = Name
+                }.SendMessageToClient(ircClient);
+            }
+
+            _clients.Remove(client);
         }
     }
 }
