@@ -51,6 +51,7 @@
     <Compile Include="Irc\Commands\Received\PrivateMessageCommand.cs" />
     <Compile Include="Irc\Commands\Received\UserCommand.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\ErrorNeedMoreParamsCommand.cs" />
+    <Compile Include="Irc\Commands\Sent\Errors\NicknameInUseError.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\NoSuchNickError.cs" />
     <Compile Include="Irc\Commands\Sent\ISentCommands.cs" />
     <Compile Include="Irc\Commands\Sent\Replies\WelcomeReply.cs" />

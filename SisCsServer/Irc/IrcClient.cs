@@ -26,6 +26,7 @@ namespace SisCsServer.Irc
             _networkClient.MessageReceived += ProcessClientCommand;
 
             _receiveInputTask = _networkClient.ReceiveInput();
+            NickName = "*";
         }
 
         public async void SendMessage(string message)
@@ -36,12 +37,15 @@ namespace SisCsServer.Irc
         public void AttemptUserActivation()
         {
             // For now, a user is activated if he has a valid nickname and full name set
-            if (!string.IsNullOrWhiteSpace(NickName) && !string.IsNullOrWhiteSpace(FullName))
-            {
-                UserActivated = true;
-                if (IrcUserActivated != null)
-                    IrcUserActivated(this);
-            }
+            if (string.IsNullOrWhiteSpace(NickName) || NickName == "*")
+                return;
+
+            if (string.IsNullOrWhiteSpace(FullName))
+                return;
+            
+            UserActivated = true;
+            if (IrcUserActivated != null)
+                IrcUserActivated(this);
         }
 
         public void SetUserMask()

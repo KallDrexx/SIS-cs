@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SisCsServer.Irc.Commands.Sent.Errors;
 using SisCsServer.Irc.Commands.Sent.Replies;
@@ -44,6 +45,11 @@ namespace SisCsServer.Irc
 
             client.SendMessage(
                 string.Format(":{0} PRIVMSG {1} :{2}", sender.UserMask, recipientNickName, message));
+        }
+
+        public bool NickNameInUse(string nickname)
+        {
+            return _clients.Any(x => x.NickName.Equals(nickname, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
