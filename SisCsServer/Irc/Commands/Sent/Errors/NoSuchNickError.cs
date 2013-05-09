@@ -1,6 +1,6 @@
 ﻿namespace SisCsServer.Irc.Commands.Sent.Errors
 {
-    public class NoSuchNickError : ISentCommands
+    public class NoSuchNickError : ISentCommand
     {
         private const int ResponseCode = 401;
         private const string Message = "No such nick/channel";

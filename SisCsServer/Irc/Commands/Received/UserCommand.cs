@@ -9,7 +9,7 @@ namespace SisCsServer.Irc.Commands.Received
         {
             if (args.Length < 4)
             {
-                var replyCommand = new ErrorNeedMoreParamsCommand
+                var replyCommand = new NeedMoreParamsError
                 {
                     Command = "USER",
                     SenderAddress = Server.HostName

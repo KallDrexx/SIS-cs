@@ -1,4 +1,5 @@
-﻿using SisCsServer.Irc.Commands.Sent.Errors;
+﻿using SisCsServer.Irc.Commands.Sent;
+using SisCsServer.Irc.Commands.Sent.Errors;
 
 namespace SisCsServer.Irc.Commands.Received
 {
@@ -12,14 +13,13 @@ namespace SisCsServer.Irc.Commands.Received
 
             if (controller.NickNameInUse(args[0]))
             {
-                var errorMessage = new NicknameInUseError
+                new NicknameInUseError
                 {
                     SenderAddress = Server.HostName,
                     SenderNickName = client.NickName,
                     AttemptedNickName = args[0]
-                }.FormFullResponseString();
+                }.SendMessageToClient(client);
 
-                client.SendMessage(errorMessage);
                 return;
             }
 

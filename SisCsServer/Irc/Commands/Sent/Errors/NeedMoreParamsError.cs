@@ -1,6 +1,6 @@
 ﻿namespace SisCsServer.Irc.Commands.Sent.Errors
 {
-    public class ErrorNeedMoreParamsCommand : ISentCommands
+    public class NeedMoreParamsError : ISentCommand
     {
         private const int ResponseCode = 461;
         private const string ResponseText = ":Not enough parameters";

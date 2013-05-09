@@ -9,10 +9,12 @@ namespace SisCsServer.Irc
     public class IrcController
     {
         private readonly List<IrcClient> _clients;
+        private readonly List<Channel> _channels;
 
         public IrcController(List<IrcClient> clients)
         {
             _clients = clients;
+            _channels = new List<Channel>();
         }
 
         public void SendActivationMessages(IrcClient client)
@@ -50,6 +52,20 @@ namespace SisCsServer.Irc
         public bool NickNameInUse(string nickname)
         {
             return _clients.Any(x => x.NickName.Equals(nickname, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public void JoinChannel(IrcClient client, string channelName)
+        {
+            // If the channel doesn't exist yet, create it
+            var channel =
+                _channels.FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.InvariantCultureIgnoreCase));
+            if (channel == null)
+            {
+                channel = new Channel(channelName);
+                _channels.Add(channel);
+            }
+
+            channel.JoinClient(client);
         }
     }
 }

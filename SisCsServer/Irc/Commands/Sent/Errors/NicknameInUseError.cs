@@ -1,6 +1,6 @@
 ﻿namespace SisCsServer.Irc.Commands.Sent.Errors
 {
-    public class NicknameInUseError : ISentCommands
+    public class NicknameInUseError : ISentCommand
     {
         private const int ResponseCode = 433;
         private const string Message = "Nickname is already in use.";

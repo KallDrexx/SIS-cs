@@ -2,7 +2,7 @@
 
 namespace SisCsServer.Irc.Commands.Sent.Replies
 {
-    public class WelcomeReply : ISentCommands
+    public class WelcomeReply : ISentCommand
     {
         private const int ResponseCode = 001;
         private const string Message = "Welcome to the SIS server";
