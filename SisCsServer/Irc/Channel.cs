@@ -83,5 +83,21 @@ namespace SisCsServer.Irc
 
             _clients.Remove(client);
         }
+
+        public void BroadcastMessage(IrcClient source, string message)
+        {
+            foreach (var ircClient in _clients)
+            {
+                if (ircClient == source)
+                    continue;
+                
+                new PrivateMessageAnnouncement
+                {
+                    SenderMask = source.UserMask,
+                    Recipient = "#" + Name,
+                    Message = message
+                }.SendMessageToClient(ircClient);
+            }
+        }
     }
 }

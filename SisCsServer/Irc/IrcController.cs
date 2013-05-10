@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SisCsServer.Irc.Commands.Sent;
+using SisCsServer.Irc.Commands.Sent.Announcements;
 using SisCsServer.Irc.Commands.Sent.Errors;
 using SisCsServer.Irc.Commands.Sent.Replies;
 
@@ -45,8 +47,12 @@ namespace SisCsServer.Irc
                 return;
             }
 
-            client.SendMessage(
-                string.Format(":{0} PRIVMSG {1} :{2}", sender.UserMask, recipientNickName, message));
+            new PrivateMessageAnnouncement
+            {
+                SenderMask = sender.UserMask,
+                Recipient = recipientNickName,
+                Message = message
+            }.SendMessageToClient(client);
         }
 
         public bool NickNameInUse(string nickname)
@@ -78,6 +84,17 @@ namespace SisCsServer.Irc
                 return;
 
             channel.PartClient(client);
+        }
+
+        public void SendMessageToChannel(IrcClient sender, string channelName, string message)
+        {
+            var channel =
+                _channels.FirstOrDefault(x => x.Name.Equals(channelName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (channel == null)
+                return;
+
+            channel.BroadcastMessage(sender, message);
         }
     }
 }

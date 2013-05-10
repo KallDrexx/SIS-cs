@@ -52,6 +52,7 @@
     <Compile Include="Irc\Commands\Received\PartCommand.cs" />
     <Compile Include="Irc\Commands\Received\PrivateMessageCommand.cs" />
     <Compile Include="Irc\Commands\Received\UserCommand.cs" />
+    <Compile Include="Irc\Commands\Sent\Announcements\PrivateMessageAnnouncement.cs" />
     <Compile Include="Irc\Commands\Sent\Announcements\UserJoinedChannelAnnouncement.cs" />
     <Compile Include="Irc\Commands\Sent\Announcements\UserPartedChannelAnnouncement.cs" />
     <Compile Include="Irc\Commands\Sent\Errors\NeedMoreParamsError.cs" />

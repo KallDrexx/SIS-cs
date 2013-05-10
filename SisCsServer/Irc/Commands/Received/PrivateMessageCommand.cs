@@ -10,7 +10,16 @@ namespace SisCsServer.Irc.Commands.Received
             if (args.Length < 2)
                 return;
 
-            controller.SendPrivateMessageToUser(client, args[0], args[1]);
+            // Detect if this is being sent to a user or a channel 
+            if (args[0].StartsWith("#"))
+            {
+                var channel = args[0].Substring(1);
+                controller.SendMessageToChannel(client, channel, args[1]);
+            }
+            else
+            {
+                controller.SendPrivateMessageToUser(client, args[0], args[1]);
+            }
         }
     }
 }
